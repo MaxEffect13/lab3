@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="AJstyles.css">
+    <script src="moment.js"></script>
+    <script src="accounting.js"></script>
+    <title>Have a drink on me!</title>
+
+</head>
+
+<body>
+    <h3>Beverage Order</h3>
+    <div class="form-inline" id="customer">
+        <label for="custname">Customer Name</label>
+        <input type="text" class="form-control" id="custname" style="width:350px">
+    </div>
+    <br>
+    <div class="form-inline" id="options">
+        <label for="beverage" id="bevchoice">Beverage</label>
+        <select class="form-control" style="width:200px" id="beverage">
+            <option value="coffee">Coffee</option>
+            <option value="tea">Tea</option>
+            <option value="beer">Beer</option>
+            <option value="wine">Wine</option>
+        </select>
+        <form class="form-inline">
+            <label class="radio-inline">
+                <input type="radio" name="size" value="small">Small</label>
+            <label class="radio-inline">
+                <input type="radio" name="size" value="medium">Medium</label>
+            <label class="radio-inline">
+                <input type="radio" name="size" value="large">Large</label>
+        </form>
+        <label for="quantity">Quantity</label>
+        <input type="text" class="form-control col-2" id="quantity">
+    </div>
+    <div class="form-inline" id="birth-date">
+        <label for="birth">Date of Birth</label>
+        <input type="text" class="form-control" style="width:350px">
+    </div>
+    <button onclick="receipt()" type="submit" class="btn btn-primary" style="margin-left: 15px">Submit Order</button>
+    <div id="receipt">
+        <h3 style="text-align: center">Receipt</h3>
+        <p style="text-align: center" id="receipt-print"></p>
+        <p style="text-align: center" id="receipt-total"></p>
+    </div>
+
+    <script>
+        function receipt() {
+            var x = document.getElementById("beverage");
+            var i = x.selectedIndex;
+            var beverage = x.options[i].text
+            var size;
+            var name = document.getElementById("custname").value;
+            var quantity = document.getElementById("quantity").value;
+            var price;
+            var total;
+            //document.getElementById("demo").innerHTML = x.options[i].text;
+            if (beverage == "Wine" || beverage == "Beer") {
+                var birth = window.prompt("You ordered some alcoholic beverages.  Please enter your date of birth.", "DD/MM/YYYY");
+                if (birth == "") {
+                    birth = window.prompt("Please enter a valid birth date", "DD/MM/YYYY");
+                }
+                var d1 = new Date(birth);
+                var d2 = new Date();
+                var twentyOne = 7670;
+                var twentyOneYearsAgo = moment().subtract(21, "years").calendar();
+                var milliDiff = Math.abs(d2.getTime() - d1.getTime());
+                var dayDiff = Math.floor(milliDiff / (1000 * 3600 * 24));
+                //document.getElementById("demo").innerHTML = dayDiff;
+                if (dayDiff < twentyOne) {
+                    window.alert(name + ", you cannot order an alcoholic beverage.\nYou must be born before " + twentyOneYearsAgo);
+                } else {
+                    size = document.forms[0];
+                    var i;
+                    for (i = 0; i < size.length; i++) {
+                        if (size[i].checked) {
+                            //txt = txt + "You ordered a " + size[i].value + " drink."
+                            size = size[i].value;
+                        }
+                    }
+                    switch(true) {
+                        case (beverage == "Wine") && (size == "small"): price = 4.25; break;
+                        case (beverage == "Wine") && (size == "medium"): price = 4.40; break;
+                        case (beverage == "Wine") && (size == "large"): price = 4.50; break;
+                        case (beverage == "Beer") && (size == "small"): price = 3.00; break;
+                        case (beverage == "Beer") && (size == "medium"): price = 3.25; break;
+                        case (beverage == "Beer") && (size == "large"): price = 3.50; break;
+                    }
+                    //document.getElementById("demo").innerHTML = price;
+                    total = price * quantity;
+                    price = accounting.formatMoney(price, "$", 2, ",", ".");
+                    total = accounting.formatMoney(total, "$", 2, ",", ".");
+                    document.getElementById("receipt").style.visibility = "visible";
+                    document.getElementById("receipt-print").innerHTML = name + " ordered " + quantity + " " + size + " " + beverage + " @ " + price;
+                    document.getElementById("receipt-total").innerHTML = "TOTAL DUE: " + total;
+                    //document.getElementById("demo").innerHTML = total;
+            
+                }
+            } else {
+                size = document.forms[0];
+                var i;
+                for (i = 0; i < size.length; i++) {
+                    if(size[i].checked) {
+                        size = size[i].value;
+                    }
+                }
+                switch(true) {
+                    case (beverage == "Tea") && (size == "small"): price = 2.00; break;
+                    case (beverage == "Tea") && (size == "medium"): price = 2.20; break;
+                    case (beverage == "Tea") && (size == "large"): price = 2.40; break;
+                    case (beverage == "Coffee") && (size == "small"): price = 1.50; break;
+                    case (beverage == "Coffee") && (size == "medium"): price = 1.65; break;
+                    case (beverage == "Coffee") && (size == "large"): price = 1.80; break;
+                }
+                total = price * quantity;
+                price = accounting.formatMoney(price, "$", 2, ",", ".");
+                total = accounting.formatMoney(total, "$", 2, ",", ".");
+                document.getElementById("receipt").style.visibility = "visible";
+                document.getElementById("receipt-print").innerHTML = name + " ordered " + quantity + " " + size + " " + beverage + " @ " + price;
+                document.getElementById("receipt-total").innerHTML = "TOTAL DUE: " + total;
+                //document.getElementById("demo").innerHTML = total;
+            }
+        }
+    </script>
+
+</body>

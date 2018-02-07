@@ -1,0 +1,23 @@
+#customer label {
+    padding: 15px;
+}
+
+#options  label{
+    padding: 15px;
+}
+
+#birth-date label {
+    padding: 15px;
+}
+
+#birth-date {
+    visibility: hidden;
+}
+
+#receipt {
+    visibility: hidden;
+    border-style: solid;
+    border-color: black;
+    width: 50%;
+    margin: 0 auto;
+}
